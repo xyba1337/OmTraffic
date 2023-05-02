@@ -1,0 +1,6 @@
+message: "Hello, how are you?"  # The message to send
+message_delay: 2  # Delay in seconds between each message
+threads: 10  # Number of threads to use for sending messages
+use_own_proxies: "no"  # "yes" if using own proxies, "no" if scraping proxies
+proxy_timeout: 10  # Proxy timeout in seconds
+lang: "en"  # Language to use for Omegle
