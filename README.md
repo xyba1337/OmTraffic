@@ -1,10 +1,11 @@
 # OmTraffic
-
 OmTraffic is a fast and efficient Python script that enables you to send a large number of messages to random strangers on Omegle quickly.
 
 ## Preview
-It is recommended to use good premium proxies for the best performance.
+It is recommended to use good premium proxies for the best performance.<br>
 In this preview I used premium proxyscrape proxies with 100 threads, they are decent but something like webshare would be better.
+
+![](https://github.com/xyba1337/OmTraffic/blob/main/Preview.gif)
 
 ## Features
 
