@@ -1,6 +1,6 @@
 # OmTraffic
 
-OmTraffic is a Python script for sending messages to random strangers on Omegle. It is designed to simulate human-like behavior by sending messages with randomized emojis and using a rotating proxy list to avoid getting blocked by Omegle.
+OmTraffic is a fast and efficient Python script that enables you to send a large number of messages to random strangers on Omegle quickly.
 
 ## Preview
 It is recommended to use good premium proxies for the best performance.
