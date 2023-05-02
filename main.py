@@ -180,7 +180,7 @@ class OmTraffic:
 
     def runProgram(self):
         with ThreadPoolExecutor(max_workers=self.num_threads) as executor:
-            # Submit send_messages function to executor for each thread
+            # Submit mainAction function to executor for each thread
             for i in range(self.num_threads):
              executor.submit(self.mainAction)
 
