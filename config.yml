@@ -1,6 +1,11 @@
 message: "Hello, how are you?"  # The message to send
 message_delay: 2  # Delay in seconds between each message
-threads: 10  # Number of threads to use for sending messages
+threads: 100  # Number of threads to use for sending messages
 use_own_proxies: "no"  # "yes" if using own proxies, "no" if scraping proxies
 proxy_timeout: 10  # Proxy timeout in seconds
-lang: "en"  # Language to use for Omegle
+proxy_type: "http"  # http/socks4/socks4a/socks5
+lang: "en"  # Language to use for Omegle (en, de, es, fr, and so on...) -> "Alpha 2"-> https://www.nationsonline.org/oneworld/country_code_list.htm 
+use_emoji: true # Adds a random emoji to the end of each message
+rand_prefix: true  # Adds a random string to the end of each message
+rand_suffix: true  # Adds a random string to the start of each message
+channel_type: "text"  # text/cam
