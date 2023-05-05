@@ -1,3 +1,23 @@
+![OmTraffic](OmTraffic.png)
+
+<div align='center'>
+  
+<a href='https://github.com/chroline/well_app/releases'>
+  
+<img src='https://img.shields.io/github/v/release/xyba1337/omtraffic?color=%23FDD835&label=version&style=for-the-badge'>
+  
+</a>
+  
+<a href='https://github.com/xyba1337/omtraffic/blob/main/LICENSE'>
+  
+<img src='https://img.shields.io/github/license/xyba1337/omtraffic?style=for-the-badge'>
+  
+</a>
+  
+</div>
+
+<br>
+
 # OmTraffic
 OmTraffic is a fast and efficient Python script that enables you to send a large number of messages to random strangers on Omegle quickly.
 Educational purpouses only.
