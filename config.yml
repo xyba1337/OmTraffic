@@ -1,6 +1,6 @@
 message: "Hello, how are you?"  # The message to send
 message_delay: 2  # Delay in seconds between each message
-threads: 100  # Number of threads to use for sending messages
+threads: 20  # Number of threads to use for sending messages
 use_own_proxies: "yes"  # "yes" if using own proxies, "no" if scraping proxies
 proxy_timeout: 10  # Proxy timeout in seconds
 proxy_type: "http"  # http/socks4/socks4a/socks5

@@ -2,6 +2,7 @@
 from concurrent.futures import ThreadPoolExecutor
 from rich.console import Console
 import yaml, random, ctypes, itertools, requests, time, string, emoji_list
+from requests import Session
 import headerCollection
 
 # Define a class for OmTraffic
@@ -61,7 +62,7 @@ class OmTraffic:
         # Set the initial title
         ctypes.windll.kernel32.SetConsoleTitleW(f"Sent {self.counter} messages, failed {self.failed_counter} messages")
 
-    def grabCCparam(self, s):
+    def grabCCparam(self, s: Session) -> str:
         # Grab cc parameter
         url = f"https://waw{random.randint(1,4)}.omegle.com/check"
 
@@ -80,7 +81,7 @@ class OmTraffic:
             self.failed_counter += 1
 
     
-    def connectToServer(self, s, ccParam):
+    def connectToServer(self, s: Session, ccParam: str) -> str:
         # Connect to server
         if ccParam is not None:
             if self.channel_type == "cam":
@@ -109,7 +110,7 @@ class OmTraffic:
                     else:
                         self.console.print("[bold][-][/] Failed to connect to server", style="red")
         
-    def sendMessage(self, s, clientId):
+    def sendMessage(self, s: Session, clientId: str):
         # Send message
             url = f"https://front{random.randint(2,48)}.omegle.com/send"
 
@@ -146,7 +147,7 @@ class OmTraffic:
                 self.console.print("Failed to send message", style="red")
                 self.failed_counter += 1
 
-    def disconnectFromServer(self, s, clientId):
+    def disconnectFromServer(self, s: Session, clientId: str):
         url = f"https://front{random.randint(2,48)}.omegle.com/disconnect"
         payload = "id=" + clientId
 
@@ -163,7 +164,7 @@ class OmTraffic:
             
         s.close()
 
-    def fireTypeEvent(self, s, clientId):
+    def fireTypeEvent(self, s: Session, clientId: str):
         url = f"https://front{random.randint(2,48)}.omegle.com/typing"
         payload = "id=" + clientId
         
