@@ -62,7 +62,6 @@ proxy:
   type: "http"  # http/socks4/socks4a/socks5
   timeout: 10 # Proxy timeout in seconds
 message:
-  content: "Hello, how are you?"  # The message to send
   delay: 2  # Delay in seconds between each message
   use_emoji: true # Adds a random emoji to the end of each message
   use_prefix: false  # Adds a random string to the end of each message
