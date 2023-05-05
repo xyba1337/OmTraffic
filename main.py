@@ -24,7 +24,6 @@ class OmTraffic:
         self.proxy_timeout = cfg["proxy"]["timeout"]
         self.proxy_type = cfg["proxy"]["type"]
 
-        self.message = cfg["message"]["content"]
         self.delay = cfg["message"]["delay"]
         self.use_emoji = cfg["message"]["use_emoji"]
         self.rand_prefix = cfg["message"]["use_prefix"]
@@ -61,8 +60,14 @@ class OmTraffic:
             except requests.exceptions.RequestException as e:
                 self.console.print(f"Error fetching proxies: {e}", style="red")
 
+        with open("messages.txt") as f:
+            self.messages = [line.strip() for line in f]
+
         # Create a proxy cycler
         self.proxy_cycler = itertools.cycle(self.proxies)
+
+        # Create a message cycler
+        self.message_cyler = itertools.cycle(self.messages)
 
         # Set the initial title
         ctypes.windll.kernel32.SetConsoleTitleW(f"Sent {self.counter} messages, failed {self.failed_counter} messages")
@@ -133,10 +138,12 @@ class OmTraffic:
 
             if self.rand_suffix: random_suffix = ''.join(random.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits) for i in range(3))
 
-            final_message = f"{random_suffix} {self.message} {random_prefix} {random_emoji}"
+            message = next(self.message_cyler)
+
+            final_message = f"{random_suffix} {message} {random_prefix} {random_emoji}"
 
             data = {
-                'msg': self.message,
+                'msg': final_message,
                 'id': clientId
             }
 
