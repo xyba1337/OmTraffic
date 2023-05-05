@@ -1,13 +1,8 @@
 # Import the required libraries
 from concurrent.futures import ThreadPoolExecutor
-import time
-import requests
 from rich.console import Console
+import yaml, random, ctypes, itertools, requests, time, string, emoji_list
 import headerCollection
-import itertools
-import ctypes
-import yaml
-import random
 
 # Define a class for OmTraffic
 class OmTraffic:
@@ -27,13 +22,18 @@ class OmTraffic:
         self.counter = 0
         self.failed_counter = 0
         self.proxies = []
+        # new
+        self.use_emoji = cfg["use_emoji"]
+        self.rand_prefix = cfg["rand_prefix"]
+        self.rand_suffix = cfg["rand_suffix"]
+        self.channel_type = cfg["channel_type"]
 
         # Create a console object
         self.console = Console()
 
         # Define the console messages
         self.console.print("\n\nWelcome to OmTraffic", style="bold green")
-        self.console.print("version 1.0.0", style="underline")
+        self.console.print("version 1.0.1", style="underline")
         self.console.print("\nMade with ❤️  by https://github.com/xyba1337\n\n")
 
         # Check if own proxies are used
@@ -60,10 +60,9 @@ class OmTraffic:
         # Set the initial title
         ctypes.windll.kernel32.SetConsoleTitleW(f"Sent {self.counter} messages, failed {self.failed_counter} messages")
 
-
     def grabCCparam(self, s):
         # Grab cc parameter
-        url = f"https://waw3.omegle.com/check"
+        url = "https://waw{}.omegle.com/check".format(random.randint(1,4))
 
         data = None
 
@@ -83,8 +82,10 @@ class OmTraffic:
     def connectToServer(self, s, ccParam):
         # Connect to server
         if ccParam is not None:
-            url = "https://front47.omegle.com/start?caps=recaptcha2,t3&firstevents=1&spid=&randid=WWCPUZHS&cc=" + ccParam + "&lang=" + self.lang
-
+            if self.channel_type == "cam":
+                url = "https://front{}.omegle.com/start?caps=recaptcha2,t3&firstevents=1&spid=&randid=WWCPUZHS&cc={}&lang={}&camera=OBS Virtual Camera&webrtc=1".format(random.randint(2,48), ccParam, self.lang)
+            else:
+                url = "https://front{}.omegle.com/start?caps=recaptcha2,t3&firstevents=1&spid=&randid=WWCPUZHS&cc={}&lang={}".format(random.randint(2,48), ccParam, self.lang)
             payload = {}
 
             response = None
@@ -109,13 +110,23 @@ class OmTraffic:
         
     def sendMessage(self, s, clientId):
         # Send message
-            url = 'https://front47.omegle.com/send'
-            emoji_list = ["😊", "🚀", "🎉", "🐻", "🍕", "🌈", "🎵", "🦄", "🍔", "🎁", "🎈", "🎄", "🎃", "🐶", "🐱", "🐰", "🐼", "🐬", "🐞", "🌻", "🍁", "🍓", "🍩", "🍭", "🍺", "🎬", "🎮", "🎤", "🎸", "🎭", "🎨", "📚", "💡", "💻", "🚲", "🏠", "✈️", "⛵️", "🏖️", "🏞️", "🏙️", "🌅", "🌌", "🌉", "🔥", "💥", "💫", "👑", "💍", "💄", "👓", "🧢", "👟", "🎒", "📱", "🔑", "💰", "📌", "📆", "📬", "📦", "🛍️", "🛒", "📷", "🎥", "🔭", "🔬", "🌡️", "🚑", "🚒", "🚔", "🚕", "🚀", "🛸", "🛵", "🛴", "🛹", "🏍️", "🏎️", "🚲", "🏠", "🏰", "⛪️", "🏥", "🏫", "🏢", "🏭", "🏦", "🏛️", "🌲", "🌳", "🌴", "🌵", "🌾", "🍀", "🍁", "🍂", "🍃", "🍇", "🍈", "🍉", "🍊", "🍋", "🍌", "🍍", "🥭", "🍎", "🍏", "🍐", "🍑", "🍒", "🍓", "🥝", "🍅", "🥑", "🥦", "🥕", "🌽", "🥔", "🍠", "🥐", "🍞", "🥖", "🥨", "🧀", "🥚", "🍳", "🥞", "🥓", "🥩", "🍔", "🍟", "🍕", "🌭", "🥪", "🌮", "🌯", "🥗", "🥘", "🍲", "🍛", "🍜", "🍝", "🍠", "🍢", "🍣", "🍤", "🍥"]
+            url = "https://front{}.omegle.com/send".format(random.randint(2,48))
 
-            random_emoji = random.choice(emoji_list)
-            final_message = self.message + " " + random_emoji
+            final_message = ""
+            random_emoji = "" 
+            random_prefix = ""
+            random_suffix = ""
+
+            if self.use_emoji: random_emoji = random.choice(emoji_list.all_emoji)
+
+            if self.rand_prefix: random_prefix = ''.join(random.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits) for i in range(3))
+
+            if self.rand_suffix: random_suffix = ''.join(random.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits) for i in range(3))
+
+            final_message = "{} {} {} {}".format(random_suffix, self.message, random_prefix, random_emoji)
+
             data = {
-                'msg': final_message,
+                'msg': self.message,
                 'id': clientId
             }
 
@@ -135,7 +146,7 @@ class OmTraffic:
                 self.failed_counter += 1
 
     def disconnectFromServer(self, s, clientId):
-        url = "https://front47.omegle.com/disconnect"
+        url = "https://front{}.omegle.com/disconnect".format(random.randint(2,48))
         payload = "id=" + clientId
 
         response = s.post(
