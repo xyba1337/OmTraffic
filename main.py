@@ -22,17 +22,18 @@ class OmTraffic:
         self.counter = 0
         self.failed_counter = 0
         self.proxies = []
-        # new
         self.use_emoji = cfg["use_emoji"]
         self.rand_prefix = cfg["rand_prefix"]
         self.rand_suffix = cfg["rand_suffix"]
         self.channel_type = cfg["channel_type"]
+        self.proxy_type = cfg["proxy_type"]
 
         # Create a console object
         self.console = Console()
 
         # Define the console messages
         self.console.print("\n\nWelcome to OmTraffic", style="bold green")
+        self.console.print("version 1.0.2", style="underline")
         self.console.print("version 1.0.1", style="underline")
         self.console.print("\nMade with ❤️  by https://github.com/xyba1337\n\n")
 
@@ -41,7 +42,7 @@ class OmTraffic:
             with open("proxies.txt") as f:
                 self.proxies = [line.strip() for line in f]
         elif self.use_own_proxies == "no":
-            api_url = f"https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout={str(self.proxy_timeout * 1000)}&country=all&ssl=all&anonymity=all"
+            api_url = f"https://api.proxyscrape.com/v2/?request=displayproxies&protocol={self.proxy_type}&timeout={str(self.proxy_timeout * 1000)}&country=all&ssl=all&anonymity=all"
 
             try:
                 response = requests.get(api_url)
@@ -170,7 +171,10 @@ class OmTraffic:
             ctypes.windll.kernel32.SetConsoleTitleW(f"Sent {self.counter} messages, failed {self.failed_counter} messages")
 
             current_proxy = next(self.proxy_cycler)
-            session.proxies = { "https": current_proxy }
+            session.proxies = {
+                "https": "{}://{}".format(self.proxy_type, current_proxy),
+                "http": "{}://{}".format(self.proxy_type, current_proxy)
+            }
 
             cc = self.grabCCparam(s = session)
             client_id = self.connectToServer(s = session, ccParam = cc)
