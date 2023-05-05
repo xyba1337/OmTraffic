@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 from rich.console import Console
 import yaml, random, ctypes, itertools, requests, time, string, emoji_list
 import headerCollection
+from urllib import parse
 
 # Define a class for OmTraffic
 class OmTraffic:
@@ -27,6 +28,7 @@ class OmTraffic:
         self.use_emoji = cfg["message"]["use_emoji"]
         self.rand_prefix = cfg["message"]["use_prefix"]
         self.rand_suffix = cfg["message"]["use_suffix"]
+        self.topics = cfg["message"]["topics"]
 
         self.counter = 0
         self.failed_counter = 0
@@ -91,6 +93,9 @@ class OmTraffic:
             else:
                 url = f"https://front{random.randint(2,48)}.omegle.com/start?caps=recaptcha2,t3&firstevents=1&spid=&randid=WWCPUZHS&cc={ccParam}&lang={self.lang}"
             payload = {}
+
+            if self.topics != []:
+                url += "&topics=%s" % (parse.quote_plus(str(self.topics).replace(" ", "")))
 
             response = None
             try:
