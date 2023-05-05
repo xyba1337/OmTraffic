@@ -4,6 +4,7 @@ from rich.console import Console
 import yaml, random, ctypes, itertools, requests, time, string, emoji_list
 from requests import Session
 import headerCollection
+from urllib import parse
 
 # Define a class for OmTraffic
 class OmTraffic:
@@ -14,35 +15,39 @@ class OmTraffic:
             cfg = yaml.safe_load(ymlfile)
 
         # Define the message, delay, number of threads, use of own proxies, proxy timeout, and language
-        self.message = cfg["message"]
-        self.delay = cfg["message_delay"]
-        self.num_threads = cfg["threads"]
-        self.use_own_proxies = cfg["use_own_proxies"]
-        self.proxy_timeout = cfg["proxy_timeout"]
-        self.lang = cfg["lang"]
+        self.num_threads = cfg["misc"]["threads"]
+        self.lang = cfg["misc"]["lang"]
+        self.channel_type = cfg["misc"]["channel_type"]
+        self.show_typing = cfg["misc"]["show_typing"]
+
+        self.use_own_proxies = cfg["proxy"]["use_own"]
+        self.proxy_timeout = cfg["proxy"]["timeout"]
+        self.proxy_type = cfg["proxy"]["type"]
+
+        self.message = cfg["message"]["content"]
+        self.delay = cfg["message"]["delay"]
+        self.use_emoji = cfg["message"]["use_emoji"]
+        self.rand_prefix = cfg["message"]["use_prefix"]
+        self.rand_suffix = cfg["message"]["use_suffix"]
+        self.topics = cfg["message"]["topics"]
+
         self.counter = 0
         self.failed_counter = 0
         self.proxies = []
-        self.use_emoji = cfg["use_emoji"]
-        self.rand_prefix = cfg["rand_prefix"]
-        self.rand_suffix = cfg["rand_suffix"]
-        self.channel_type = cfg["channel_type"]
-        self.proxy_type = cfg["proxy_type"]
-        self.show_typing = cfg["show_typing"]
 
         # Create a console object
         self.console = Console()
 
         # Define the console messages
         self.console.print("\n\nWelcome to OmTraffic", style="bold green")
-        self.console.print("version 1.0.2", style="underline")
+        self.console.print("version 1.0.3", style="underline")
         self.console.print("\nMade with ❤️  by https://github.com/xyba1337\n\n")
 
         # Check if own proxies are used
-        if self.use_own_proxies == "yes":
+        if self.use_own_proxies:
             with open("proxies.txt") as f:
                 self.proxies = [line.strip() for line in f]
-        elif self.use_own_proxies == "no":
+        else:
             api_url = f"https://api.proxyscrape.com/v2/?request=displayproxies&protocol={self.proxy_type}&timeout={str(self.proxy_timeout * 1000)}&country=all&ssl=all&anonymity=all"
 
             try:
@@ -89,6 +94,9 @@ class OmTraffic:
             else:
                 url = f"https://front{random.randint(2,48)}.omegle.com/start?caps=recaptcha2,t3&firstevents=1&spid=&randid=WWCPUZHS&cc={ccParam}&lang={self.lang}"
             payload = {}
+
+            if self.topics != []:
+                url += "&topics=%s" % (parse.quote_plus(str(self.topics).replace(" ", "")))
 
             response = None
             try:
