@@ -1,42 +1,43 @@
 ![OmTraffic](OmTraffic.png)
 
 <div align='center'>
+
+  <a href='https://github.com/chroline/well_app/releases'>
   
-<a href='https://github.com/chroline/well_app/releases'>
+  <img src='https://img.shields.io/github/v/release/xyba1337/omtraffic?color=%23FDD835&label=version&style=for-the-badge'>
   
-<img src='https://img.shields.io/github/v/release/xyba1337/omtraffic?color=%23FDD835&label=version&style=for-the-badge'>
+  </a>
   
-</a>
+  <a href='https://github.com/xyba1337/omtraffic/blob/main/LICENSE'>
   
-<a href='https://github.com/xyba1337/omtraffic/blob/main/LICENSE'>
+  <img src='https://img.shields.io/github/license/xyba1337/omtraffic?style=for-the-badge'>
   
-<img src='https://img.shields.io/github/license/xyba1337/omtraffic?style=for-the-badge'>
-  
-</a>
-  
+  </a>
+
 </div>
 
 <br>
 
-# OmTraffic
-OmTraffic is a fast and efficient Python script that enables you to send a large number of messages to random strangers on Omegle quickly.
-Educational purpouses only.
+---
 
-## Preview
-It is recommended to use good premium proxies for the best performance.<br>
-In this preview I used premium proxyscrape proxies with 100 threads, they are decent but something like webshare would be better.
+# :speech_balloon: OmTraffic 
+OmTraffic is a fast and efficient Python script that enables you to send a large number of messages to random strangers on Omegle quickly. :rocket: It's for educational purposes only! :mortar_board:
+
+## :eyes: Preview 
+It is recommended to use good premium proxies for the best performance. In this preview, I used premium proxyscrape proxies with 100 threads, they are decent but something like webshare would be better.
 
 ![](https://github.com/xyba1337/OmTraffic/blob/main/Preview.gif)
 
-## Features
+## :rocket: Features 
 
-* Sends messages with randomized emojis
-* Multi-threaded for faster message sending
-* Customizable message delay and number of threads
-* Supports use of own proxies or automatic proxy scraping (HTTP only)
-* Configurable language settings
+* Sends messages with randomized emojis, prefix, suffix to avoid detections :robot:
+* Multi-threaded for faster message sending :zap:
+* Customizable message delay and number of threads :gear:
+* Supports use of own proxies and every proxy type or automatic proxy scraping :globe_with_meridians:
+* Configurable language settings :earth_americas:
+* Typing spoofer :keyboard:
 
-## How to Use
+## :computer: How to Use 
 
 1. Clone this repository to your local machine:
 
@@ -74,10 +75,10 @@ message:
 python main.py
 ```
 
-## Contributions
+## :handshake: Contributions
 Contributions to this project are highly appreciated. Feel free to submit a pull request or open an issue for any suggestions or improvements.
 
-## License
+## :page_with_curl: License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
 
