@@ -34,7 +34,6 @@ class OmTraffic:
         # Define the console messages
         self.console.print("\n\nWelcome to OmTraffic", style="bold green")
         self.console.print("version 1.0.2", style="underline")
-        self.console.print("version 1.0.1", style="underline")
         self.console.print("\nMade with ❤️  by https://github.com/xyba1337\n\n")
 
         # Check if own proxies are used
@@ -172,8 +171,8 @@ class OmTraffic:
 
             current_proxy = next(self.proxy_cycler)
             session.proxies = {
-                "https": "{}://{}".format(self.proxy_type, current_proxy),
-                "http": "{}://{}".format(self.proxy_type, current_proxy)
+                "http": "{}://{}".format(self.proxy_type, current_proxy),
+                "https": "{}://{}".format(self.proxy_type, current_proxy)
             }
 
             cc = self.grabCCparam(s = session)
