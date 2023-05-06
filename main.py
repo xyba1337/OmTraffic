@@ -48,12 +48,20 @@ class OmTraffic:
                 self.proxies = [line.strip() for line in f]
         else:
             api_url = f"https://api.proxyscrape.com/v2/?request=displayproxies&protocol={self.proxy_type}&timeout={str(self.proxy_timeout * 1000)}&country=all&ssl=all&anonymity=all"
+            api_url2 = f"https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/{self.proxy_type}.txt"
+            api_url3 = f"https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/{self.proxy_type}.txt"
+            api_url4 = f"https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/{self.proxy_type}.txt"
 
             try:
                 response = requests.get(api_url)
+                response2 = requests.get(api_url2)
+                response3 = requests.get(api_url3)
+                response4 = requests.get(api_url4)
+
+                proxypool = response.text + "\r\n" + response2.text + "\r\n" + response3.text + "\r\n" + response4.text
 
                 if response.status_code == 200:
-                    self.proxies = response.text.split("\r\n")
+                    self.proxies = proxypool.split("\r\n")
                     self.console.print(f"Found {len(self.proxies)} proxies", style="cyan")
                 else:
                     self.console.print("Failed to fetch proxies")
