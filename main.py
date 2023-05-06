@@ -146,8 +146,6 @@ class OmTraffic:
 
             message = next(self.message_cyler)
 
-            print("................................")
-
             t = time.localtime()
             current_time = time.strftime("%H:%M:%S", t)
             message = str(message).replace("#TIME#", current_time)
@@ -162,8 +160,6 @@ class OmTraffic:
             message = str(message).replace("#RANDEMOJI#", randemoji)
 
             final_message = f"{random_suffix} {message} {random_prefix} {random_emoji}"
-
-            print(final_message)
 
             data = {
                 'msg': final_message,
