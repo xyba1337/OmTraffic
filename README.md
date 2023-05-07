@@ -52,14 +52,14 @@ pip install -r requirements.txt
 ```
 
 3. Configure the script by editing the config.yml file:
-```python
+```yml
 misc:
-  threads: 100  # Number of threads to use for sending messages
+  threads: 20  # Number of threads to use for sending messages
   lang: "en"  # Language to use for Omegle (en, de, es, fr, and so on...) -> "Alpha 2"-> https://www.nationsonline.org/oneworld/country_code_list.htm 
   channel_type: "text"  # Text/Cam
   show_typing: true # Shows the "Typing..." message to the user on the other end before sending the message
 proxy:
-  use_own: false # "true" if using own proxies, "false" if scraping proxies
+  use_own: true # "true" if using own proxies, "false" if scraping proxies
   type: "http"  # http/socks4/socks4a/socks5
   timeout: 10 # Proxy timeout in seconds
 message:
@@ -67,6 +67,8 @@ message:
   use_emoji: true # Adds a random emoji to the end of each message
   use_prefix: false  # Adds a random string to the end of each message
   use_suffix: false  # Adds a random string to the start of each message
+  delay_after: 2 # How long until disconnect after the message has been sent
+  topics: [] # Topics/Keywords to queue inside of, Example: ["minecraft", "valorant"].
 
 ```
 
