@@ -2,7 +2,6 @@
 from concurrent.futures import ThreadPoolExecutor
 from rich.console import Console
 import yaml, random, ctypes, itertools, requests, time, string, emoji_list
-from requests import Session
 import headerCollection
 from urllib import parse
 import time
@@ -35,6 +34,8 @@ class OmTraffic:
         self.counter = 0
         self.failed_counter = 0
         self.proxies = []
+
+        self.executor = ThreadPoolExecutor(max_workers=self.num_threads)
 
         # Create a console object
         self.console = Console()
@@ -78,7 +79,7 @@ class OmTraffic:
         # Set the initial title
         ctypes.windll.kernel32.SetConsoleTitleW(f"Sent {self.counter} messages, failed {self.failed_counter} messages")
 
-    def grabCCparam(self, s: Session) -> str:
+    def grabCCparam(self, s: requests.Session) -> str:
         # Grab cc parameter
         url = f"https://waw{random.randint(1,4)}.omegle.com/check"
 
@@ -87,7 +88,7 @@ class OmTraffic:
         method = "POST"
 
         try:
-            response = s.request(method, url, headers=headerCollection.plainHeaders, data=data, cookies=None, timeout=self.proxy_timeout)
+            response = s.request(method, url, headers=headerCollection.plainHeaders, data=data, timeout=self.proxy_timeout)
             response.close()
             cc = response.text
 
@@ -97,13 +98,13 @@ class OmTraffic:
             self.failed_counter += 1
 
     
-    def connectToServer(self, s: Session, ccParam: str) -> str:
+    def connectToServer(self, s: requests.Session, ccParam: str) -> str:
         # Connect to server
         if ccParam is not None:
             if self.channel_type == "cam":
-                url = f"https://front{random.randint(2,48)}.omegle.com/start?caps=recaptcha2,t3&firstevents=1&spid=&randid=WWCPUZHS&cc={ccParam}&lang={self.lang}&camera=OBS Virtual Camera&webrtc=1"
+                url = f"https://front1.omegle.com/start?caps=recaptcha2,t3&firstevents=1&spid=&randid=VLJXHUAV&cc={ccParam}&lang={self.lang}&camera=OBS Virtual Camera&webrtc=1"
             else:
-                url = f"https://front{random.randint(2,48)}.omegle.com/start?caps=recaptcha2,t3&firstevents=1&spid=&randid=WWCPUZHS&cc={ccParam}&lang={self.lang}"
+                url = f"https://front1.omegle.com/start?caps=recaptcha2,t3&firstevents=1&spid=&randid=VLJXHUAV&cc={ccParam}&lang={self.lang}"
             payload = {}
 
             if self.topics != []:
@@ -120,18 +121,28 @@ class OmTraffic:
             if response is not None:
                 """ print(response.json()) """
                 if 'application/json' in response.headers.get('Content-Type', ''):
+                    response_json = response.json()
+                    if "events" in response_json and response_json["events"] and response_json["events"][0][0] == "recaptchaRequired":
+                        self.console.print("[bold][-][/] Recaptcha required!", style="red")
+                        return "Captcha"
+                    
+                    if "events" in response_json and response_json["events"] and response_json["events"][0][0] == "antinudeBanned":
+                        self.console.print("[bold][-][/] Anti-nude banned!", style="red")
+                        return "Antinude"
+
+                    
                     if "clientID" in response.json() and response.json()["clientID"]:
                         client_id = response.json()["clientID"]
                         self.console.print(
                             "[bold][+][/] Connected to server [bold]" + client_id, style="cyan")
-                        """ self.console.print(f"CONNECTED - {response.json()}") """ # Uncomment to see if you get a captcha
+                        self.console.print(f"Response: - {response.json()}") # Uncomment to see if you get a captcha
                         return client_id
                     else:
                         self.console.print("[bold][-][/] Failed to connect to server", style="red")
         
-    def sendMessage(self, s: Session, clientId: str):
+    def sendMessage(self, s: requests.Session, clientId: str):
         # Send message
-            url = f"https://front{random.randint(2,48)}.omegle.com/send"
+            url = f"https://front1.omegle.com/send"
 
             final_message = ""
             random_emoji = "" 
@@ -181,8 +192,8 @@ class OmTraffic:
                 self.console.print("Failed to send message", style="red")
                 self.failed_counter += 1
 
-    def disconnectFromServer(self, s: Session, clientId: str):
-        url = f"https://front{random.randint(2,48)}.omegle.com/disconnect"
+    def disconnectFromServer(self, s: requests.Session, clientId: str):
+        url = f"https://front1.omegle.com/disconnect"
         payload = "id=" + clientId
 
         response = s.post(
@@ -193,13 +204,11 @@ class OmTraffic:
                 "[bold][+][/] Disconnected from server [bold]" + clientId + "", style="blue")
         else:
             self.console.print("[bold][-][/] Failed to disconnect from server", style="red")
-        
-        time.sleep(self.delay)
             
         s.close()
 
-    def fireTypeEvent(self, s: Session, clientId: str):
-        url = f"https://front{random.randint(2,48)}.omegle.com/typing"
+    def fireTypeEvent(self, s: requests.Session, clientId: str):
+        url = f"https://front1.omegle.com/typing"
         payload = "id=" + clientId
         
         try:
@@ -215,8 +224,6 @@ class OmTraffic:
 
         except requests.exceptions.RequestException as e:
             self.console.print(f"{e}", style="red")
-        
-        time.sleep(self.delay)
             
         s.close()
 
@@ -228,26 +235,30 @@ class OmTraffic:
             ctypes.windll.kernel32.SetConsoleTitleW(f"Sent {self.counter} messages, failed {self.failed_counter} messages")
 
             current_proxy = next(self.proxy_cycler)
-            session.proxies = {
-                "http": f"{self.proxy_type}://{current_proxy}",
-                "https": f"{self.proxy_type}://{current_proxy}"
-            }
+            theproxy = { "https": f"{self.proxy_type}://{current_proxy}" }
+
+            session.proxies.update(theproxy)
 
             cc = self.grabCCparam(s = session)
+            time.sleep(self.delay)
             client_id = self.connectToServer(s = session, ccParam = cc)
             
-            time.sleep(self.delay)
-
             if not client_id:
                 self.failed_counter += 1
                 continue
+            
+            if client_id == "Captcha" or client_id == "Antinude":
+                self.failed_counter += 1
+                continue
+
+            time.sleep(self.delay)
+
 
             if self.show_typing:
                 self.fireTypeEvent(s = session, clientId = client_id)
+                time.sleep(self.delay)
 
             self.sendMessage(s = session, clientId = client_id)
-            
-            time.sleep(self.delay)
 
             # Disconnect from server
             self.disconnectFromServer(s = session, clientId = client_id)
@@ -257,6 +268,7 @@ class OmTraffic:
         with ThreadPoolExecutor(max_workers=self.num_threads) as executor:
             # Submit mainAction function to executor for each thread
             for i in range(self.num_threads):
+             """ time.sleep(2) """
              executor.submit(self.mainAction)
 
 Om = OmTraffic()
