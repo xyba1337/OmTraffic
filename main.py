@@ -4,6 +4,8 @@ from rich.console import Console
 import yaml, random, ctypes, itertools, requests, time, string, emoji_list
 import headerCollection
 from urllib import parse
+import time
+from datetime import date
 
 # Define a class for OmTraffic
 class OmTraffic:
@@ -40,7 +42,7 @@ class OmTraffic:
 
         # Define the console messages
         self.console.print("\n\nWelcome to OmTraffic", style="bold green")
-        self.console.print("version 1.0.3", style="underline")
+        self.console.print("version 1.0.5", style="underline")
         self.console.print("\nMade with ❤️  by https://github.com/xyba1337\n\n")
 
         # Check if own proxies are used
@@ -49,12 +51,16 @@ class OmTraffic:
                 self.proxies = [line.strip() for line in f]
         else:
             api_url = f"https://api.proxyscrape.com/v2/?request=displayproxies&protocol={self.proxy_type}&timeout={str(self.proxy_timeout * 1000)}&country=all&ssl=all&anonymity=all"
+            api_url2 = f"https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/{self.proxy_type}.txt"
 
             try:
                 response = requests.get(api_url)
+                response2 = requests.get(api_url2)
+
+                proxypool = response.text + "\r\n" + response2.text
 
                 if response.status_code == 200:
-                    self.proxies = response.text.split("\r\n")
+                    self.proxies = proxypool.split("\r\n")
                     self.console.print(f"Found {len(self.proxies)} proxies", style="cyan")
                 else:
                     self.console.print("Failed to fetch proxies")
@@ -150,6 +156,19 @@ class OmTraffic:
             if self.rand_suffix: random_suffix = ''.join(random.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits) for i in range(3))
 
             message = next(self.message_cyler)
+
+            t = time.localtime()
+            current_time = time.strftime("%H:%M:%S", t)
+            message = str(message).replace("#TIME#", current_time)
+
+            #today = date.today()
+            #message = str(message).replace("#DATE#", today)
+            
+            #xdatetime = f"{today} {current_time}"
+            #message = str(message).replace("#DATETIME#", xdatetime)
+
+            randemoji = random.choice(emoji_list.all_emoji)
+            message = str(message).replace("#RANDEMOJI#", randemoji)
 
             final_message = f"{random_suffix} {message} {random_prefix} {random_emoji}"
 

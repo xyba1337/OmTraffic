@@ -13,4 +13,4 @@ message:
   use_prefix: false  # Adds a random string to the end of each message
   use_suffix: false  # Adds a random string to the start of each message
   delay_after: 2 # How long until disconnect after the message has been sent
-  topics: [] # Topics to queue inside of ; example ["youtube", "tiktok"].
+  topics: [] # Topics/Keywords to queue inside of, Example: ["minecraft", "valorant"].
