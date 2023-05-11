@@ -101,7 +101,7 @@ class OmTraffic:
     def connectToServer(self, s: requests.Session, ccParam: str) -> str:
         # Connect to server
         if ccParam is not None:
-            characters = string.ascii_uppercase + string.digits
+            characters = ''.join(c for c in string.ascii_uppercase + string.digits if c not in 'IO')
             randid = ''.join(random.choice(characters) for i in range(7))
 
             if self.channel_type == "cam":
