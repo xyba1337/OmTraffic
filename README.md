@@ -23,8 +23,11 @@
 # :speech_balloon: OmTraffic 
 OmTraffic is a fast and efficient Python script that enables you to send a large number of messages to random strangers on Omegle quickly. :rocket: It's for educational purposes only! :mortar_board:
 
+🌟 Star this repo if you enjoy using our tool and want it to stay updated and working
+
 ## :eyes: Preview 
-It is recommended to use good premium proxies for the best performance. In this preview, I used premium proxyscrape proxies with 100 threads, they are decent but something like webshare would be better.
+It is recommended to use good premium proxies for the best performance. We can highly recommend you intenseproxy.com but don't use rotating proxies, they wont work!
+If you use proxies with username and password, make sure that they are in the format of username:password@ip:port
 
 ![](https://github.com/xyba1337/OmTraffic/blob/main/Preview.gif)
 
@@ -51,22 +54,23 @@ pip install -r requirements.txt
 ```
 
 3. Configure the script by editing the config.yml file:
-```python
+```yml
 misc:
-  threads: 100  # Number of threads to use for sending messages
+  threads: 20  # Number of threads to use for sending messages
   lang: "en"  # Language to use for Omegle (en, de, es, fr, and so on...) -> "Alpha 2"-> https://www.nationsonline.org/oneworld/country_code_list.htm 
   channel_type: "text"  # Text/Cam
   show_typing: true # Shows the "Typing..." message to the user on the other end before sending the message
 proxy:
-  use_own: false # "true" if using own proxies, "false" if scraping proxies
+  use_own: true # "true" if using own proxies, "false" if scraping proxies
   type: "http"  # http/socks4/socks4a/socks5
   timeout: 10 # Proxy timeout in seconds
 message:
-  content: "Hello, how are you?"  # The message to send
   delay: 2  # Delay in seconds between each message
   use_emoji: true # Adds a random emoji to the end of each message
   use_prefix: false  # Adds a random string to the end of each message
   use_suffix: false  # Adds a random string to the start of each message
+  delay_after: 2 # How long until disconnect after the message has been sent
+  topics: [] # Topics/Keywords to queue inside of, Example: ["minecraft", "valorant"].
 
 ```
 
