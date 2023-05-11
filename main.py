@@ -1,9 +1,11 @@
 # Import the required libraries
 from concurrent.futures import ThreadPoolExecutor
+import os
 from rich.console import Console
 import yaml, random, ctypes, itertools, requests, time, string, emoji_list
 import headerCollection
 from urllib import parse
+import string
 
 # Define a class for OmTraffic
 class OmTraffic:
@@ -75,7 +77,7 @@ class OmTraffic:
 
     def grabCCparam(self, s: requests.Session) -> str:
         # Grab cc parameter
-        url = f"https://waw{random.randint(1,4)}.omegle.com/check"
+        url = f"https://waw3.omegle.com/check"
 
         data = None
 
@@ -95,12 +97,15 @@ class OmTraffic:
     def connectToServer(self, s: requests.Session, ccParam: str) -> str:
         # Connect to server
         if ccParam is not None:
-            if self.channel_type == "cam":
-                url = f"https://front1.omegle.com/start?caps=recaptcha2,t3&firstevents=1&spid=&randid=VLJXHUAV&cc={ccParam}&lang={self.lang}&camera=OBS Virtual Camera&webrtc=1"
-            else:
-                url = f"https://front1.omegle.com/start?caps=recaptcha2,t3&firstevents=1&spid=&randid=VLJXHUAV&cc={ccParam}&lang={self.lang}"
-            payload = {}
+            characters = string.ascii_uppercase + string.digits
+            randid = ''.join(random.choice(characters) for i in range(7))
 
+            if self.channel_type == "cam":
+                url = f"https://front20.omegle.com/start?caps=recaptcha2,t3&firstevents=1&spid=&randid={randid}&cc={ccParam}&lang={self.lang}&camera=OBS Virtual Camera&webrtc=1"
+            else:
+                url = f"https://front20.omegle.com/start?caps=recaptcha2,t3&firstevents=1&spid=&randid={randid}&&cc={ccParam}&lang={self.lang}"
+            payload = {}
+    
             if self.topics != []:
                 url += "&topics=%s" % (parse.quote_plus(str(self.topics).replace(" ", "")))
 
@@ -113,7 +118,7 @@ class OmTraffic:
                 self.console.print(e, style="red")
 
             if response is not None:
-                """ print(response.json()) """
+                print(response.json())
                 if 'application/json' in response.headers.get('Content-Type', ''):
                     response_json = response.json()
                     if "events" in response_json and response_json["events"] and response_json["events"][0][0] == "recaptchaRequired":
@@ -136,7 +141,7 @@ class OmTraffic:
         
     def sendMessage(self, s: requests.Session, clientId: str):
         # Send message
-            url = f"https://front1.omegle.com/send"
+            url = f"https://front35.omegle.com/send"
 
             final_message = ""
             random_emoji = "" 
