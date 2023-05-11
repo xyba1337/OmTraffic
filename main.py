@@ -1,11 +1,11 @@
 # Import the required libraries
 from concurrent.futures import ThreadPoolExecutor
-import os
 from rich.console import Console
 import yaml, random, ctypes, itertools, requests, time, string, emoji_list
 import headerCollection
 from urllib import parse
-import string
+import time
+from datetime import date
 
 # Define a class for OmTraffic
 class OmTraffic:
@@ -42,7 +42,7 @@ class OmTraffic:
 
         # Define the console messages
         self.console.print("\n\nWelcome to OmTraffic", style="bold green")
-        self.console.print("version 1.0.3", style="underline")
+        self.console.print("version 1.0.5", style="underline")
         self.console.print("\nMade with ❤️  by https://github.com/xyba1337\n\n")
 
         # Check if own proxies are used
@@ -51,12 +51,16 @@ class OmTraffic:
                 self.proxies = [line.strip() for line in f]
         else:
             api_url = f"https://api.proxyscrape.com/v2/?request=displayproxies&protocol={self.proxy_type}&timeout={str(self.proxy_timeout * 1000)}&country=all&ssl=all&anonymity=all"
+            api_url2 = f"https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/{self.proxy_type}.txt"
 
             try:
                 response = requests.get(api_url)
+                response2 = requests.get(api_url2)
+
+                proxypool = response.text + "\r\n" + response2.text
 
                 if response.status_code == 200:
-                    self.proxies = response.text.split("\r\n")
+                    self.proxies = proxypool.split("\r\n")
                     self.console.print(f"Found {len(self.proxies)} proxies", style="cyan")
                 else:
                     self.console.print("Failed to fetch proxies")
@@ -77,7 +81,7 @@ class OmTraffic:
 
     def grabCCparam(self, s: requests.Session) -> str:
         # Grab cc parameter
-        url = f"https://waw3.omegle.com/check"
+        url = f"https://waw{random.randint(1,4)}.omegle.com/check"
 
         data = None
 
@@ -105,7 +109,7 @@ class OmTraffic:
             else:
                 url = f"https://front20.omegle.com/start?caps=recaptcha2,t3&firstevents=1&spid=&randid={randid}&&cc={ccParam}&lang={self.lang}"
             payload = {}
-    
+
             if self.topics != []:
                 url += "&topics=%s" % (parse.quote_plus(str(self.topics).replace(" ", "")))
 
@@ -118,7 +122,7 @@ class OmTraffic:
                 self.console.print(e, style="red")
 
             if response is not None:
-                print(response.json())
+                """ print(response.json()) """
                 if 'application/json' in response.headers.get('Content-Type', ''):
                     response_json = response.json()
                     if "events" in response_json and response_json["events"] and response_json["events"][0][0] == "recaptchaRequired":
@@ -134,14 +138,14 @@ class OmTraffic:
                         client_id = response.json()["clientID"]
                         self.console.print(
                             "[bold][+][/] Connected to server [bold]" + client_id, style="cyan")
-                        self.console.print(f"Response: - {response.json()}") # Uncomment to see if you get a captcha
+                        """ self.console.print(f"Response: - {response.json()}") """ # Uncomment to see if you get a captcha
                         return client_id
                     else:
                         self.console.print("[bold][-][/] Failed to connect to server", style="red")
         
     def sendMessage(self, s: requests.Session, clientId: str):
         # Send message
-            url = f"https://front35.omegle.com/send"
+            url = f"https://front1.omegle.com/send"
 
             final_message = ""
             random_emoji = "" 
@@ -155,6 +159,19 @@ class OmTraffic:
             if self.rand_suffix: random_suffix = ''.join(random.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits) for i in range(3))
 
             message = next(self.message_cyler)
+
+            t = time.localtime()
+            current_time = time.strftime("%H:%M:%S", t)
+            message = str(message).replace("#TIME#", current_time)
+
+            #today = date.today()
+            #message = str(message).replace("#DATE#", today)
+            
+            #xdatetime = f"{today} {current_time}"
+            #message = str(message).replace("#DATETIME#", xdatetime)
+
+            randemoji = random.choice(emoji_list.all_emoji)
+            message = str(message).replace("#RANDEMOJI#", randemoji)
 
             final_message = f"{random_suffix} {message} {random_prefix} {random_emoji}"
 
