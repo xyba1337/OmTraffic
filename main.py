@@ -1,10 +1,9 @@
 # Import the required libraries
 from concurrent.futures import ThreadPoolExecutor
 from rich.console import Console
-import yaml, random, ctypes, itertools, requests, time, string, emoji_list
+import yaml, random, ctypes, itertools, requests, time, string, emoji_list, time
 import headerCollection
 from urllib import parse
-import time
 from datetime import date
 
 # Define a class for OmTraffic
@@ -54,8 +53,8 @@ class OmTraffic:
             api_url2 = f"https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/{self.proxy_type}.txt"
 
             try:
-                response = requests.get(api_url)
-                response2 = requests.get(api_url2)
+                response = requests.get(api_url, verify=True)
+                response2 = requests.get(api_url2, verify=True)
 
                 proxypool = response.text + "\r\n" + response2.text
 
@@ -88,7 +87,7 @@ class OmTraffic:
         method = "POST"
 
         try:
-            response = s.request(method, url, headers=headerCollection.plainHeaders, data=data, timeout=self.proxy_timeout)
+            response = s.request(method, url, headers=headerCollection.plainHeaders, data=data, timeout=self.proxy_timeout, verify=True)
             response.close()
             cc = response.text
 
@@ -116,7 +115,7 @@ class OmTraffic:
             response = None
             try:
                 response = s.post(
-                    url, headers=headerCollection.jsonHeaders, data=payload)
+                    url, headers=headerCollection.jsonHeaders, data=payload, verify=True)
                 response.close()
             except Exception as e: 
                 self.console.print(e, style="red")
@@ -200,7 +199,7 @@ class OmTraffic:
         payload = "id=" + clientId
 
         response = s.post(
-            url, headers=headerCollection.plainHeaders, data=payload)
+            url, headers=headerCollection.plainHeaders, data=payload, verify=True)
 
         if response.text == "win":
             self.console.print(
@@ -216,7 +215,7 @@ class OmTraffic:
         
         try:
             response = s.post(
-                url, headers=headerCollection.plainHeaders, data=payload
+                url, headers=headerCollection.plainHeaders, data=payload, verify=True
             )
 
             if response.text == "win":
